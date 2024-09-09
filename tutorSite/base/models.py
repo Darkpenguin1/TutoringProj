@@ -21,6 +21,8 @@ class Room(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)   # autonow add saves the value when it was instaniated 
 
+    class Meta:
+        ordering = ['-updated', '-created'] # newest item gets shown first
 
     def __str__(self) -> str:
         return self.name
