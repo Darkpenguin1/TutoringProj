@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+from django.db.models import Q
+
 
 # Create your views here.
-from .models import Room
+from .models import Room, Topic
 from .forms import RoomForm
 # how to query db
 # queryset = modelname.objects.all()
@@ -17,12 +19,21 @@ from .forms import RoomForm
 # ]
 
 def home(request):
-    rooms = Room.objects.all()
-    context = {'rooms':rooms}
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    rooms = Room.objects.filter(
+        Q(topic__name__icontains=q) |
+        Q(name__icontains=q) |
+        Q(description__icontains=q) 
+        ) # while typing if the typed string atleast contains certain amount of letters for ex py
+
+    topics = Topic.objects.all()
+    room_count = rooms.count()
+
+    context = {'rooms':rooms, 'topics':topics, 'room_count':room_count,}
     return render(request, "base/home.html", context)   # Specify the app and its templates folder basically blueprints in flask
 
 def room(request, pk):  # primary key 
-    room = Room.objects.get(id=pk)
+    room = Room.objects.get(id=pk)       
     context = {"room": room}
     
     return render(request, "base/room.html", context)
