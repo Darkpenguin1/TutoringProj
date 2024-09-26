@@ -1,10 +1,11 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Room, Topic, Message
+from .models import Room, Topic, Message, User
 
 
 
+admin.site.register(User)
 admin.site.register(Room)   # allows the admin site to view the room model
 admin.site.register(Message)
 admin.site.register(Topic)
